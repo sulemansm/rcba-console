@@ -134,6 +134,11 @@ def load_google_credentials() -> dict:
 
 
 def get_whitelisted_emails() -> set:
-    """Get set of whitelisted email addresses"""
     raw = get_secret("WHITELISTED_EMAILS", "")
+
+    # If already a list (Streamlit secrets)
+    if isinstance(raw, list):
+        return {e.strip().lower() for e in raw if e.strip()}
+
+    # If string (local .env)
     return {e.strip().lower() for e in raw.split(",") if e.strip()}
