@@ -142,3 +142,37 @@ def get_whitelisted_emails() -> set:
 
     # If string (local .env)
     return {e.strip().lower() for e in raw.split(",") if e.strip()}
+
+
+def has_google_credentials() -> bool:
+    """
+    Check if Google OAuth credentials are available from any source
+    Returns True if credentials can be found (file or JSON string)
+    """
+    # Check if GOOGLE_CREDENTIALS_JSON is available (Streamlit Cloud or .env)
+    try:
+        creds_json = get_secret("GOOGLE_CREDENTIALS_JSON")
+        if creds_json:
+            try:
+                data = json.loads(creds_json) if isinstance(creds_json, str) else creds_json
+                if data.get("web") or data.get("installed"):
+                    return True
+            except:
+                pass
+    except:
+        pass
+    
+    # Check if google_credentials.json file exists (local)
+    try:
+        creds_file = get_secret("GOOGLE_CREDENTIALS_FILE", "google_credentials.json")
+        if os.path.exists(creds_file):
+            return True
+    except:
+        pass
+    
+    return False
+
+
+def is_running_on_streamlit_cloud() -> bool:
+    """Check if app is running on Streamlit Cloud"""
+    return "STREAMLIT_SERVER_HEADLESS" in os.environ or "streamlit" in os.getenv("PATH", "")

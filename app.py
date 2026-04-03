@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 # Import secrets manager for Streamlit Cloud compatibility
 from secrets_manager import (
     get_secret, get_oauth_redirect_uri, load_google_credentials, 
-    get_whitelisted_emails
+    get_whitelisted_emails, has_google_credentials
 )
 
 load_dotenv()
@@ -514,15 +514,27 @@ def logout():
 def login_screen():
     render_header()
     problems = []
-    if not os.path.exists(CREDENTIALS_FILE): problems.append(f"`{CREDENTIALS_FILE}` not found")
-    if not GOOGLE_CLIENT_ID:                 problems.append("`client_id` missing from credentials JSON")
-    if not GOOGLE_CLIENT_SECRET:             problems.append("`client_secret` missing")
-    if not WHITELISTED_EMAILS:               problems.append("`WHITELISTED_EMAILS` not set in `.env`")
+    if not has_google_credentials():                problems.append(f"`GOOGLE_CREDENTIALS_JSON` secret or `google_credentials.json` file not found")
+    if not GOOGLE_CLIENT_ID:                        problems.append("`client_id` missing from credentials")
+    if not GOOGLE_CLIENT_SECRET:                    problems.append("`client_secret` missing from credentials")
+    if not WHITELISTED_EMAILS:                      problems.append("`WHITELISTED_EMAILS` not set")
 
     if problems:
         st.error("Configuration issues:\n\n" + "\n".join(f"- {p}" for p in problems))
         with st.expander("Setup instructions"):
-            st.markdown(f"1. `google_credentials.json` beside `app.py`.\n2. Redirect URI: `{REDIRECT_URI}`\n3. `.env`: `WHITELISTED_EMAILS=alice@gmail.com`\n4. `pip install -r requirements.txt && streamlit run app.py`")
+            st.markdown("""
+**Local Setup:**
+1. Create `google_credentials.json` beside `app.py` (download from Google Cloud Console)
+2. Create `.env` with:
+   - `WHITELISTED_EMAILS=alice@gmail.com,bob@example.com`
+   - Other secrets (SENDER_EMAIL, etc.)
+3. Run: `pip install -r requirements.txt && streamlit run app.py`
+
+**Streamlit Cloud Setup:**
+1. Go to app settings → Secrets
+2. Add all values from `.env` (including `GOOGLE_CREDENTIALS_JSON` as JSON string)
+3. Deploy
+            """)
         return
 
     auth_code = st.session_state.get("pending_code","")
