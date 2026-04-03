@@ -1,0 +1,15 @@
+# .streamlit/config.toml - Streamlit configuration
+# Optional: customize look and feel
+
+[theme]
+primaryColor = "#00C9B1"
+backgroundColor = "#0E1117"
+secondaryBackgroundColor = "#262730"
+textColor = "#FAFAFA"
+font = "sans serif"
+
+[logger]
+level = "info"
+
+[client]
+showErrorDetails = true

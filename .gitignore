@@ -1,0 +1,42 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+.env/
+
+# Environment variables - NEVER commit these
+.env
+.env.local
+
+# Streamlit secrets (local testing only)
+.streamlit/secrets.toml
+
+# Google OAuth credentials - SECURITY: Never commit!
+google_credentials.json
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data files
+data/
+uploads/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Cache
+.pytest_cache/
+.mypy_cache/
