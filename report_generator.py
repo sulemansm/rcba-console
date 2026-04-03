@@ -1,7 +1,7 @@
 import os
-from groq import Groq
+import streamlit as st
 
-GROQ_API_KEY=os.getenv("GROQ_API_KEY")
+GROQ_API_KEY = st.secrets["groq"]["api_key"]
 
 
 def generate_report(event):

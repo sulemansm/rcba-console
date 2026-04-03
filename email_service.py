@@ -1,10 +1,10 @@
 import smtplib
 from email.message import EmailMessage
-import os
+import streamlit as st
 
-SENDER_EMAIL = os.getenv("SENDER_EMAIL")
-SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
-SECRETARY_EMAIL = os.getenv("SECRETARY_EMAIL")
+SENDER_EMAIL = st.secrets["email"]["sender"]
+SENDER_PASSWORD = st.secrets["email"]["password"]
+SECRETARY_EMAIL = st.secrets["email"]["secretary"]
 
 
 def send_email(event_title, docx_bytes):

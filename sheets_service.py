@@ -1,9 +1,11 @@
 import gspread
 import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
+import streamlit as st
+import json
+from oauth2client.service_account import ServiceAccountCredentials
 
 SHEET_NAME = "RCBA Reports"
-
 
 def connect_sheet():
 
@@ -12,16 +14,16 @@ def connect_sheet():
         "https://www.googleapis.com/auth/drive"
     ]
 
-    creds = ServiceAccountCredentials.from_json_keyfile_name(
-        "google_credentials.json", scope
+    creds_dict = st.secrets["gcp_service_account"]
+
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(
+        creds_dict, scope
     )
 
     client = gspread.authorize(creds)
-
     sheet = client.open(SHEET_NAME).sheet1
 
     return sheet
-
 
 def save_report(row):
 
